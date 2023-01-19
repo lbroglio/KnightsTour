@@ -58,7 +58,7 @@ struct adjList* generateBoard(int numRows, int numColumns){
             }
         }
 
-        if(columnNum + 1 >= 0){
+        if(columnNum + 1 < numColumns){
             
             if(rowNum -2 >=0 ){
                 tempList[movesPos] = i - (numColumns *2) + 1;
@@ -69,7 +69,7 @@ struct adjList* generateBoard(int numRows, int numColumns){
                 movesPos++;
             }
 
-            if(columnNum + 2 >= 0){
+            if(columnNum + 2 < numColumns){
                 if(rowNum - 1 >=0 ){
                     tempList[movesPos] = i - (numColumns) + 2;
                     movesPos++;
@@ -127,8 +127,8 @@ int checkTourContains(int* tour, int tourLength, int spaceToCheck){
  * @param size Length of the tour
  * @param fileName Name of the output file
  */
-void outputTours(int* tourToOutput, int size, char* fileName){
-    FILE* outputFile = fopen(fileName,"a")
+void outputTour(int* tourToOutput, int size, char* fileName){
+    FILE* outputFile = fopen(fileName,"a");
     for(int i=0;  i < size; i++){
         int currOutput = tourToOutput[i];
         printf("%d,",currOutput);
@@ -151,8 +151,9 @@ void outputTours(int* tourToOutput, int size, char* fileName){
  * @param foundTours The number of tours that the program has found
  */
 void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour, int moveNum,int* foundTours){
+    printf("HERE: %d\n",currSpace);
     if(moveNum == boardSize){
-        *(foundTours)++;
+        *foundTours += 1;
         outputTour(currTour,boardSize,"foundTours.txt");
     }
     for(int i=0; i < (board[currSpace].size); i++){
@@ -173,16 +174,16 @@ void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour
 int main(int argc, char *argv[]) {
 
     struct adjList* board = generateBoard(5,5);
-
+    
     int numTours;
     int* foundTours = &numTours;
-    int[25] tourArr; 
+    int tourArr[25]; 
 
     for(int i=0; i < 25; i++){
         findTours(25,board,0,tourArr,0,foundTours);
     }
-
     printf("Found: %d tours",numTours);
+    
     
 
   
