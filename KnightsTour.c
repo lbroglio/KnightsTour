@@ -29,8 +29,9 @@ struct adjList* generateBoard(int numRows, int numColumns){
     //Holds connected spaces while the options are being found
     int* tempList = (int*) malloc(sizeof(int) * 8);
 
-    //Finds all the possible moves at the current space
+    //Moves through all the spaces on the board
     for(i=0; i<boardSize; i++){
+        //Finds all the possible moves at the current space
         int movesPos = 0;
 
         int columnNum = i % numColumns;
@@ -99,23 +100,89 @@ struct adjList* generateBoard(int numRows, int numColumns){
     
 }
 
+/**
+ * @brief Checks to see if a given space has already been included in a given tour.
+ * 
+ * @param tour The tour(integer array) to check for the given space
+ * @param tourLength The length of the given tour
+ * @param spaceToCheck The space to check if it has been visited previously 
+ * @return 1 is the tour does contain the space. 0 if it does not 
+ */
+int checkTourContains(int* tour, int tourLength, int spaceToCheck){
+    for(int i=0; i< tourLength; i++){
+        int currSpace = tour[i];
+        if(currSpace == spaceToCheck){
+            return 1;
+        }
+    }
+    return 0;
 
+}
+
+
+/**
+ * @brief Prints the current tour to the console and given file
+ * 
+ * @param tourToOutput The tour to output
+ * @param size Length of the tour
+ * @param fileName Name of the output file
+ */
+void outputTours(int* tourToOutput, int size, char* fileName){
+    FILE* outputFile = fopen(fileName,"a")
+    for(int i=0;  i < size; i++){
+        int currOutput = tourToOutput[i];
+        printf("%d,",currOutput);
+        fprintf(outputFile,"%d,",currOutput);
+    }
+    printf("\n");
+    fprintf(outputFile,"\n"); 
+
+    fclose(outputFile);
+}
+
+/**
+ * @brief Recursively finds all the possible knight's tours for a given space on the given board. Outputs its found tours to a file/ and the console
+ * 
+ * @param boardSize The size of the given board.
+ * @param board Array of structs which represents the board as a graph
+ * @param currSpace The current space the knight is at
+ * @param currTour Array representing the current tour the knight is on
+ * @param moveNum The current number of moves the knight has made
+ * @param foundTours The number of tours that the program has found
+ */
+void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour, int moveNum,int* foundTours){
+    if(moveNum == boardSize){
+        *(foundTours)++;
+        outputTour(currTour,boardSize,"foundTours.txt");
+    }
+    for(int i=0; i < (board[currSpace].size); i++){
+        int nextSpace = board[currSpace].contents[i];
+
+        int alreadyVisited = checkTourContains(currTour,moveNum,nextSpace+1);
+
+        if(alreadyVisited == 0){
+            currTour[moveNum] = nextSpace + 1;
+            findTours(boardSize,board,nextSpace,currTour,moveNum+1,foundTours);
+        }
+    }
+
+
+}
 
 
 int main(int argc, char *argv[]) {
 
     struct adjList* board = generateBoard(5,5);
 
-    for(int i=0; i<25;  i++){
-        int* curList = board[i].contents;
-        int listSize = board[i].size;
-        printf("%d: ",i+1);
+    int numTours;
+    int* foundTours = &numTours;
+    int[25] tourArr; 
 
-        for(int j=0; j < listSize; j++){
-            printf("%d, ",curList[j] +1);
-        }
-        printf("\n");
+    for(int i=0; i < 25; i++){
+        findTours(25,board,0,tourArr,0,foundTours);
     }
+
+    printf("Found: %d tours",numTours);
     
 
   
