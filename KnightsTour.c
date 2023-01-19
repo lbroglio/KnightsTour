@@ -130,8 +130,11 @@ int checkTourContains(int* tour, int tourLength, int spaceToCheck){
 void outputTour(int* tourToOutput, int size, char* fileName){
     FILE* outputFile = fopen(fileName,"a");
     for(int i=0;  i < size; i++){
+        if(i != 0){
+            printf(",");
+        }
         int currOutput = tourToOutput[i];
-        printf("%d,",currOutput);
+        printf("%d",currOutput);
         fprintf(outputFile,"%d,",currOutput);
     }
     printf("\n");
@@ -151,8 +154,8 @@ void outputTour(int* tourToOutput, int size, char* fileName){
  * @param foundTours The number of tours that the program has found
  */
 void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour, int moveNum,int* foundTours){
-    printf("HERE: %d\n",currSpace);
-    if(moveNum == boardSize){
+    currTour[moveNum] = currSpace + 1;
+    if(moveNum == boardSize -1){
         *foundTours += 1;
         outputTour(currTour,boardSize,"foundTours.txt");
     }
@@ -162,7 +165,6 @@ void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour
         int alreadyVisited = checkTourContains(currTour,moveNum,nextSpace+1);
 
         if(alreadyVisited == 0){
-            currTour[moveNum] = nextSpace + 1;
             findTours(boardSize,board,nextSpace,currTour,moveNum+1,foundTours);
         }
     }
@@ -180,9 +182,9 @@ int main(int argc, char *argv[]) {
     int tourArr[25]; 
 
     for(int i=0; i < 25; i++){
-        findTours(25,board,0,tourArr,0,foundTours);
+        findTours(25,board,i,tourArr,0,foundTours);
     }
-    printf("Found: %d tours",numTours);
+    printf("Found: %d tours\n",numTours);
     
     
 
