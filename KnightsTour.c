@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+#define  ROWS  5
+#define  COLS  5
 
 /**
  * @brief Structure used to create the graphs stores the length of a list with its contents. 
@@ -12,7 +14,7 @@ struct adjList{
 };
 
 struct arrayWrapper{
-    int arr[25];
+    int arr[ROWS * COLS];
 };
 
 /**
@@ -104,25 +106,6 @@ struct adjList* generateBoard(int numRows, int numColumns){
     
 }
 
-/**
- * @brief Checks to see if a given space has already been included in a given tour.
- * 
- * @param tour The tour(integer array) to check for the given space
- * @param tourLength The length of the given tour
- * @param spaceToCheck The space to check if it has been visited previously 
- * @return 1 is the tour does contain the space. 0 if it does not 
- */
-int checkTourContains(int* tour, int tourLength, int spaceToCheck){
-    for(int i=0; i< tourLength; i++){
-        int currSpace = tour[i];
-        if(currSpace == spaceToCheck){
-            return 1;
-        }
-    }
-    return 0;
-
-}
-
 
 /**
  * @brief Prints the current tour to the console and given file
@@ -176,11 +159,9 @@ void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour
 
 int main(int argc, char *argv[]) {
 
-    int numRows = 5;
-    int numCols = 5;
-    int boardSize = numRows * numCols;
+    int boardSize = ROWS * COLS;
 
-    struct adjList* board = generateBoard(numRows,numCols);
+    struct adjList* board = generateBoard(ROWS,COLS);
 
 
     struct arrayWrapper visArr;
@@ -196,7 +177,7 @@ int main(int argc, char *argv[]) {
     for(int i=0; i < boardSize; i++){
         findTours(boardSize,board,i,tourArr,0,foundTours,visArr);
     }
-    //printf("Found: %d tours\n",numTours);
+    printf("Found: %d tours\n",numTours);
 
     free(board);
     
