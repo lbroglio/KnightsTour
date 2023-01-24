@@ -35,7 +35,7 @@ struct adjList* generateBoard(int numRows, int numColumns){
         int movesPos = 0;
 
         int columnNum = i % numColumns;
-        int rowNum = i / numRows;
+        int rowNum = i / numColumns;
         if(columnNum -1 >= 0){
             if(rowNum -2 >=0 ){
                 tempList[movesPos] = i - (numColumns *2) - 1;
@@ -175,14 +175,18 @@ void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour
 
 int main(int argc, char *argv[]) {
 
-    struct adjList* board = generateBoard(5,5);
+    int numRows =3;
+    int numCols =10;
+    int boardSize = numRows * numCols;
+
+    struct adjList* board = generateBoard(numRows,numCols);
     
     int numTours;
     int* foundTours = &numTours;
-    int tourArr[25]; 
+    int tourArr[boardSize]; 
 
-    for(int i=0; i < 25; i++){
-        findTours(25,board,i,tourArr,0,foundTours);
+    for(int i=0; i < boardSize; i++){
+        findTours(boardSize,board,i,tourArr,0,foundTours);
     }
     printf("Found: %d tours\n",numTours);
 
