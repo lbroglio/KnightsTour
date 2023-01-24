@@ -11,6 +11,10 @@ struct adjList{
     int* contents;
 };
 
+struct arrayWrapper{
+    int arr[25];
+};
+
 /**
  * @brief 
  * Generates a graph that represents the board with the nodes connected if the knight could traverse them. The graph is stored as an adjacency list
@@ -128,19 +132,14 @@ int checkTourContains(int* tour, int tourLength, int spaceToCheck){
  * @param fileName Name of the output file
  */
 void outputTour(int* tourToOutput, int size, char* fileName){
-    FILE* outputFile = fopen(fileName,"a");
     for(int i=0;  i < size; i++){
         if(i != 0){
             printf(",");
         }
         int currOutput = tourToOutput[i];
         printf("%d",currOutput);
-        fprintf(outputFile,"%d,",currOutput);
     }
     printf("\n");
-    fprintf(outputFile,"\n"); 
-
-    fclose(outputFile);
 }
 
 /**
@@ -153,8 +152,10 @@ void outputTour(int* tourToOutput, int size, char* fileName){
  * @param moveNum The current number of moves the knight has made
  * @param foundTours The number of tours that the program has found
  */
-void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour, int moveNum,int* foundTours){
+void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour, int moveNum,int* foundTours, struct arrayWrapper visArr){
     currTour[moveNum] = currSpace + 1;
+    visArr.arr[currSpace] = 1;
+
     if(moveNum == boardSize -1){
         *foundTours += 1;
         outputTour(currTour,boardSize,"foundTours.txt");
@@ -162,10 +163,10 @@ void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour
     for(int i=0; i < (board[currSpace].size); i++){
         int nextSpace = board[currSpace].contents[i];
 
-        int alreadyVisited = checkTourContains(currTour,moveNum,nextSpace+1);
+        int alreadyVisited = visArr.arr[nextSpace];
 
         if(alreadyVisited == 0){
-            findTours(boardSize,board,nextSpace,currTour,moveNum+1,foundTours);
+            findTours(boardSize,board,nextSpace,currTour,moveNum+1,foundTours,visArr);
         }
     }
 
@@ -175,20 +176,27 @@ void findTours(int boardSize, struct adjList* board,int currSpace, int* currTour
 
 int main(int argc, char *argv[]) {
 
-    int numRows =3;
-    int numCols =10;
+    int numRows = 5;
+    int numCols = 5;
     int boardSize = numRows * numCols;
 
     struct adjList* board = generateBoard(numRows,numCols);
+
+
+    struct arrayWrapper visArr;
+    for(int i=0; i < boardSize; i++){
+        visArr.arr[i] =0;
+    }
     
-    int numTours;
+    
+    int numTours = 0;
     int* foundTours = &numTours;
     int tourArr[boardSize]; 
 
     for(int i=0; i < boardSize; i++){
-        findTours(boardSize,board,i,tourArr,0,foundTours);
+        findTours(boardSize,board,i,tourArr,0,foundTours,visArr);
     }
-    printf("Found: %d tours\n",numTours);
+    //printf("Found: %d tours\n",numTours);
 
     free(board);
     
