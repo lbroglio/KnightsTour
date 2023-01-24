@@ -24,10 +24,10 @@ struct adjList* generateBoard(int numRows, int numColumns){
     int boardSize = numRows * numColumns;
 
     //Declaration for the adjacency list
-    struct adjList* boardGraph = (struct adjList*) malloc(sizeof(struct adjList) * boardSize);
+    struct adjList* boardGraph = malloc(sizeof(struct adjList) * boardSize);
 
     //Holds connected spaces while the options are being found
-    int* tempList = (int*) malloc(sizeof(int) * 8);
+    int* tempList = malloc(sizeof(int) * 8);
 
     //Moves through all the spaces on the board
     for(i=0; i<boardSize; i++){
@@ -82,7 +82,7 @@ struct adjList* generateBoard(int numRows, int numColumns){
         }
 
         //Assigns the current squares adjacency list
-        int* adjListContents = (int*)malloc(sizeof(int) * movesPos);
+        int* adjListContents = malloc(sizeof(int) * movesPos);
         for(j=0; j < movesPos; j++){
             adjListContents[j] = tempList[j];
         }
@@ -185,6 +185,8 @@ int main(int argc, char *argv[]) {
         findTours(25,board,i,tourArr,0,foundTours);
     }
     printf("Found: %d tours\n",numTours);
+
+    free(board);
     
     
 
