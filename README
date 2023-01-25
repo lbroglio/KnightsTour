@@ -1,0 +1,5 @@
+This program finds all the possible Knights Tours on a chess board of a given size. 
+It will output all of the tours to the console in the format 1,2,3 ... where the numbers aare the squares on the board.
+
+The size of the chess board can be changed by adjusting the ROWS and COLS constants at the top of the program.
+The default size is 5x5 to be in line with the assigment spec.

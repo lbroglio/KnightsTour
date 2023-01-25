@@ -125,6 +125,7 @@ void outputTour(int* tourToOutput, int size, char* fileName){
     printf("\n");
 }
 
+
 /**
  * @brief Recursively finds all the possible knight's tours for a given space on the given board. Outputs its found tours to a file/ and the console
  * 
@@ -177,7 +178,7 @@ int main(int argc, char *argv[]) {
     for(int i=0; i < boardSize; i++){
         findTours(boardSize,board,i,tourArr,0,foundTours,visArr);
     }
-    printf("Found: %d tours\n",numTours);
+    //printf("Found: %d tours\n",numTours);
 
     free(board);
     
